@@ -1,0 +1,115 @@
+// This is your Prisma schema file
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Enums converted to Strings for SQLite compatibility
+
+model Client {
+  id               String       @id @default(uuid())
+  email            String       @unique
+  password         String
+  firstName        String
+  lastName         String
+  phone            String?
+  company          String?
+  industry         String?
+  country          String?
+  status           String       @default("PENDING")
+  emailVerified    Boolean      @default(false)
+  profileImage     String?
+  refreshToken     String?
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
+
+  onboardingSteps  OnboardingStep[]
+  documents        Document[]
+  profile          ClientProfile?
+
+  @@index([email])
+  @@map("clients")
+}
+
+model ClientProfile {
+  id               String   @id @default(uuid())
+  clientId         String   @unique
+  businessType     String?
+  taxId            String?
+  website          String?
+  address          String?
+  city             String?
+  state            String?
+  zipCode          String?
+  bio              String?
+  annualRevenue    String?
+  employeeCount    String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  client           Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@map("client_profiles")
+}
+
+model OnboardingStep {
+  id               String               @id @default(uuid())
+  clientId         String
+  stepNumber       Int
+  stepType         String
+  title            String
+  description      String
+  status           String               @default("PENDING")
+  completedAt      DateTime?
+  metadata         String?
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  client           Client               @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([clientId, stepNumber])
+  @@index([clientId])
+  @@map("onboarding_steps")
+}
+
+model Document {
+  id               String         @id @default(uuid())
+  clientId         String
+  fileName         String
+  originalName     String
+  mimeType         String
+  fileSize         Int
+  filePath         String
+  documentType     String
+  status           String         @default("PENDING")
+  reviewedAt       DateTime?
+  reviewNotes      String?
+  uploadedAt       DateTime       @default(now())
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+
+  client           Client         @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@index([clientId])
+  @@map("documents")
+}
+
+model AuditLog {
+  id          String   @id @default(uuid())
+  clientId    String?
+  action      String
+  resource    String
+  resourceId  String?
+  ipAddress   String?
+  userAgent   String?
+  metadata    String?
+  createdAt   DateTime @default(now())
+
+  @@index([clientId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}

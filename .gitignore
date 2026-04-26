@@ -1,0 +1,10 @@
+node_modules/
+.env
+.env.local
+.next/
+dist/
+coverage/
+dev.db
+dev.db-journal
+uploads/
+.DS_Store
