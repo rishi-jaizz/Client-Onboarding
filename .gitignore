@@ -8,3 +8,6 @@ dev.db
 dev.db-journal
 uploads/
 .DS_Store
+node_modules/
+.next/
+.env
