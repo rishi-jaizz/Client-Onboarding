@@ -121,7 +121,7 @@ export default function HomePage() {
 
       {/* ═══════════════ HERO ═══════════════ */}
       <section className="relative z-10 w-full">
-        <W className="pt-24 sm:pt-32 pb-16 sm:pb-20">
+        <W className="pt-16 sm:pt-24 pb-14 sm:pb-18">
           <div className="flex flex-col items-center text-center">
 
             {/* Badge */}
@@ -186,7 +186,7 @@ export default function HomePage() {
 
       {/* ═══════════════ STATS ═══════════════ */}
       <section className="relative z-10 w-full">
-        <W className="pt-4 pb-20 sm:pb-24">
+        <W className="pb-16 sm:pb-20">
           <div
             className="grid gap-3 sm:gap-5"
             style={{
@@ -233,7 +233,7 @@ export default function HomePage() {
           {/* Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {features.map(f => (
-              <div key={f.title} className="glass rounded-2xl p-5 sm:p-6 glow-card card-hover group cursor-default">
+              <div key={f.title} className="glass rounded-2xl p-5 sm:p-6 glow-card card-hover group cursor-default flex flex-col">
                 <div className="w-10 h-10 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mb-4 group-hover:border-indigo-500/40 transition-colors shrink-0">
                   <f.icon className="w-5 h-5 text-indigo-400" />
                 </div>
