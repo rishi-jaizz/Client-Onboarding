@@ -178,7 +178,7 @@ export default function Sidebar() {
 
       {/* ── Mobile drawer ── */}
       <aside
-        className={`lg:hidden fixed top-0 left-0 z-50 h-full w-[280px] sidebar-surface transform transition-transform duration-300 ease-out ${
+        className={`lg:hidden fixed top-0 left-0 z-50 h-full w-64 sidebar-surface transform transition-transform duration-300 ease-out ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
@@ -204,7 +204,7 @@ export default function Sidebar() {
       </aside>
 
       {/* ── Desktop sidebar ── */}
-      <aside className="hidden lg:flex w-[240px] min-h-screen flex-col sidebar-surface shrink-0 sticky top-0">
+      <aside className="hidden lg:flex w-[220px] min-h-screen flex-col sidebar-surface shrink-0 sticky top-0">
         <SidebarContent />
       </aside>
     </>

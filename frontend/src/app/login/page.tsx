@@ -16,8 +16,6 @@ const loginSchema = z.object({
 });
 type LoginForm = z.infer<typeof loginSchema>;
 
-const inputCls = "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none input-glow transition-all text-sm";
-
 export default function LoginPage() {
   const { login } = useAuth();
   const router = useRouter();
@@ -41,77 +39,86 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen animated-bg flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen animated-bg flex flex-col items-center justify-center px-4 py-10 relative overflow-x-hidden">
       {/* Grid overlay */}
-      <div className="absolute inset-0 pointer-events-none"
+      <div aria-hidden className="fixed inset-0 pointer-events-none"
         style={{
-          backgroundImage: 'linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px)',
+          backgroundImage: 'linear-gradient(rgba(99,102,241,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,0.035) 1px,transparent 1px)',
           backgroundSize: '64px 64px',
         }}
       />
-      {/* Glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[400px] bg-indigo-600/12 rounded-full blur-[100px] pointer-events-none" />
+      {/* Centred ambient glow */}
+      <div aria-hidden className="fixed top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[400px] bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="relative w-full max-w-[420px]">
+      <div className="relative w-full max-w-[400px]">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-3 mb-7 group">
-            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-xl shadow-indigo-500/30">
+        <div className="text-center mb-7">
+          <Link href="/" className="inline-flex items-center gap-2.5 mb-6 group">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-xl shadow-indigo-500/30">
               <Zap className="w-5 h-5 text-white" />
-              <div className="absolute inset-0 rounded-xl ring-1 ring-white/15" />
             </div>
             <span className="text-[17px] font-bold text-white tracking-tight">ClientFlow</span>
           </Link>
-          <h1 className="text-2xl sm:text-[28px] font-bold text-white mb-2 tracking-tight">Welcome back</h1>
-          <p className="text-gray-500 text-sm">Sign in to continue your onboarding</p>
+          <h1 className="text-2xl font-bold text-white mb-1.5 tracking-tight">Welcome back</h1>
+          <p className="text-[13px] text-gray-500">Sign in to continue your onboarding</p>
         </div>
 
         {/* Card */}
-        <div className="glass-md rounded-2xl p-7 glow-card">
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" id="login-form">
-            {/* Email */}
+        <div className="glass-md rounded-2xl p-6 sm:p-7 glow-card">
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4" id="login-form">
+
             <div>
-              <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2" htmlFor="login-email">
+              <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="login-email">
                 Email Address
               </label>
               <input id="login-email" type="email" autoComplete="email"
-                {...register('email')} className={inputCls} placeholder="you@company.com" />
+                {...register('email')}
+                className="input-base input-glow"
+                placeholder="you@company.com"
+              />
               {errors.email && <p className="mt-1.5 text-[11px] text-red-400">{errors.email.message}</p>}
             </div>
 
-            {/* Password */}
             <div>
-              <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2" htmlFor="login-password">
+              <label className="block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5" htmlFor="login-password">
                 Password
               </label>
               <div className="relative">
-                <input id="login-password" type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password" {...register('password')}
-                  className={`${inputCls} pr-11`} placeholder="••••••••" />
+                <input id="login-password"
+                  type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password"
+                  {...register('password')}
+                  className="input-base input-glow pr-11"
+                  placeholder="••••••••"
+                />
                 <button type="button" id="toggle-password"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors">
-                  {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors p-0.5"
+                >
+                  {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
               </div>
               {errors.password && <p className="mt-1.5 text-[11px] text-red-400">{errors.password.message}</p>}
             </div>
 
             {/* Demo hint */}
-            <div className="flex items-center gap-2.5 p-3.5 rounded-xl bg-indigo-500/8 border border-indigo-500/18">
-              <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse flex-shrink-0" />
-              <p className="text-[12px] text-indigo-300">
+            <div className="flex items-start gap-2.5 p-3 rounded-xl bg-indigo-500/8 border border-indigo-500/18">
+              <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse flex-shrink-0 mt-1" />
+              <p className="text-[12px] text-indigo-300 leading-relaxed">
                 <span className="font-semibold">Demo:</span> demo@example.com / Demo@1234
               </p>
             </div>
 
-            {/* Submit */}
-            <button type="submit" id="login-submit" disabled={isLoading} className="btn-primary w-full py-3 text-sm">
-              {isLoading ? <><Loader2 className="w-4 h-4 animate-spin" />Signing in…</> : <>Sign In<ArrowRight className="w-4 h-4" /></>}
+            <button type="submit" id="login-submit" disabled={isLoading}
+              className="btn-primary w-full py-3 text-sm mt-1">
+              {isLoading
+                ? <><Loader2 className="w-4 h-4 animate-spin" />Signing in…</>
+                : <>Sign In<ArrowRight className="w-4 h-4" /></>
+              }
             </button>
           </form>
 
-          <div className="mt-6 pt-5 border-t border-white/6 text-center">
+          <div className="mt-5 pt-5 border-t border-white/6 text-center">
             <p className="text-[12.5px] text-gray-500">
               Don&apos;t have an account?{' '}
               <Link href="/signup" className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">

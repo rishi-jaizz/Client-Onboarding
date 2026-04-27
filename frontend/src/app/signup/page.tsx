@@ -12,41 +12,38 @@ import { Eye, EyeOff, Zap, ArrowRight, Loader2, CheckCircle } from 'lucide-react
 
 const signupSchema = z.object({
   firstName: z.string().min(1, 'First name is required').max(50),
-  lastName: z.string().min(1, 'Last name is required').max(50),
-  email: z.string().email('Invalid email address'),
-  password: z
-    .string()
-    .min(8, 'At least 8 characters')
+  lastName:  z.string().min(1, 'Last name is required').max(50),
+  email:     z.string().email('Invalid email address'),
+  password:  z.string().min(8,'At least 8 characters')
     .regex(/[A-Z]/, 'One uppercase letter required')
     .regex(/[0-9]/, 'One number required')
     .regex(/[^A-Za-z0-9]/, 'One special character required'),
-  company: z.string().max(100).optional(),
+  company:  z.string().max(100).optional(),
   industry: z.string().optional(),
-  phone: z.string().optional(),
-  country: z.string().optional(),
+  phone:    z.string().optional(),
+  country:  z.string().optional(),
 });
-
 type SignupForm = z.infer<typeof signupSchema>;
 
-const industries = ['Technology', 'Finance', 'Healthcare', 'Retail', 'Manufacturing', 'Education', 'Real Estate', 'Other'];
-const countries = [
-  { code: 'US', name: 'United States' },
-  { code: 'GB', name: 'United Kingdom' },
-  { code: 'CA', name: 'Canada' },
-  { code: 'AU', name: 'Australia' },
-  { code: 'IN', name: 'India' },
-  { code: 'DE', name: 'Germany' },
+const industries = ['Technology','Finance','Healthcare','Retail','Manufacturing','Education','Real Estate','Other'];
+const countries  = [
+  { code: 'US', name: 'United States' }, { code: 'GB', name: 'United Kingdom' },
+  { code: 'CA', name: 'Canada' },        { code: 'AU', name: 'Australia' },
+  { code: 'IN', name: 'India' },         { code: 'DE', name: 'Germany' },
   { code: 'FR', name: 'France' },
 ];
+const STEPS = ['Account', 'Business', 'Review'];
 
-const steps = ['Account', 'Business', 'Review'];
+const selectCls = "input-base input-glow";
+const inputCls  = "input-base input-glow";
+const labelCls  = "block text-[11px] font-bold text-gray-400 uppercase tracking-wider mb-1.5";
 
 export default function SignupPage() {
   const { signup } = useAuth();
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [currentStep, setCurrentStep] = useState(0);
+  const [isLoading, setIsLoading]       = useState(false);
+  const [currentStep, setCurrentStep]   = useState(0);
 
   const { register, handleSubmit, trigger, formState: { errors }, watch } = useForm<SignupForm>({
     resolver: zodResolver(signupSchema),
@@ -54,18 +51,16 @@ export default function SignupPage() {
   });
 
   const password = watch('password', '');
-
   const passwordChecks = [
-    { label: '8+ characters', valid: password.length >= 8 },
+    { label: '8+ characters',    valid: password.length >= 8 },
     { label: 'Uppercase letter', valid: /[A-Z]/.test(password) },
-    { label: 'Number', valid: /[0-9]/.test(password) },
-    { label: 'Special character', valid: /[^A-Za-z0-9]/.test(password) },
+    { label: 'Number',           valid: /[0-9]/.test(password) },
+    { label: 'Special character',valid: /[^A-Za-z0-9]/.test(password) },
   ];
 
   const nextStep = async () => {
-    const fieldsToValidate: (keyof SignupForm)[] =
-      currentStep === 0 ? ['firstName', 'lastName', 'email', 'password'] : [];
-    const valid = fieldsToValidate.length ? await trigger(fieldsToValidate) : true;
+    const fields = currentStep === 0 ? ['firstName','lastName','email','password'] as (keyof SignupForm)[] : [];
+    const valid  = fields.length ? await trigger(fields) : true;
     if (valid) setCurrentStep(s => Math.min(s + 1, 2));
   };
 
@@ -78,243 +73,201 @@ export default function SignupPage() {
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
       toast.error(error.response?.data?.message || 'Registration failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+    } finally { setIsLoading(false); }
   };
 
   return (
-    <div className="min-h-screen animated-bg flex items-center justify-center p-4">
-      <div className="w-full max-w-lg">
+    <div className="min-h-screen animated-bg flex flex-col items-center justify-center px-4 py-10 relative overflow-x-hidden">
+      {/* Grid */}
+      <div aria-hidden className="fixed inset-0 pointer-events-none"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(99,102,241,0.035) 1px,transparent 1px),linear-gradient(90deg,rgba(99,102,241,0.035) 1px,transparent 1px)',
+          backgroundSize: '64px 64px',
+        }}
+      />
+      <div aria-hidden className="fixed top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[400px] bg-indigo-600/10 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="relative w-full max-w-[440px]">
         {/* Logo */}
-        <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+        <div className="text-center mb-7">
+          <Link href="/" className="inline-flex items-center gap-2.5 mb-6">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-xl shadow-indigo-500/30">
               <Zap className="w-5 h-5 text-white" />
             </div>
-            <span className="text-xl font-bold text-white">ClientFlow</span>
+            <span className="text-[17px] font-bold text-white tracking-tight">ClientFlow</span>
           </Link>
-          <h1 className="text-3xl font-bold text-white mb-2">Create your account</h1>
-          <p className="text-gray-400">Join thousands of clients onboarded seamlessly</p>
+          <h1 className="text-2xl font-bold text-white mb-1.5 tracking-tight">Create your account</h1>
+          <p className="text-[13px] text-gray-500">Join thousands of clients onboarded seamlessly</p>
         </div>
 
         {/* Step indicator */}
-        <div className="flex items-center justify-center gap-2 mb-8">
-          {steps.map((step, i) => (
+        <div className="flex items-center justify-center gap-2 mb-6">
+          {STEPS.map((step, i) => (
             <div key={step} className="flex items-center gap-2">
-              <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold transition-all duration-300 ${
-                i < currentStep ? 'bg-indigo-600 text-white' :
-                i === currentStep ? 'bg-indigo-600 text-white ring-4 ring-indigo-500/30' :
-                'bg-white/10 text-gray-400'
+              <div className={`flex items-center justify-center w-7 h-7 rounded-full text-[12px] font-bold transition-all duration-300 ${
+                i < currentStep  ? 'bg-indigo-600 text-white'
+                : i === currentStep ? 'bg-indigo-600 text-white ring-4 ring-indigo-500/25'
+                : 'bg-white/8 text-gray-500'
               }`}>
-                {i < currentStep ? <CheckCircle className="w-4 h-4" /> : i + 1}
+                {i < currentStep ? <CheckCircle className="w-3.5 h-3.5" /> : i + 1}
               </div>
-              <span className={`text-sm ${i === currentStep ? 'text-white' : 'text-gray-500'}`}>{step}</span>
-              {i < steps.length - 1 && (
-                <div className={`w-8 h-0.5 rounded-full transition-all duration-300 ${i < currentStep ? 'bg-indigo-600' : 'bg-white/10'}`} />
+              <span className={`text-[12px] font-medium ${i === currentStep ? 'text-white' : 'text-gray-600'}`}>{step}</span>
+              {i < STEPS.length - 1 && (
+                <div className={`w-6 h-px rounded-full transition-all duration-300 ${i < currentStep ? 'bg-indigo-600' : 'bg-white/10'}`} />
               )}
             </div>
           ))}
         </div>
 
         {/* Card */}
-        <div className="glass rounded-3xl p-5 sm:p-8 border border-white/10 shadow-2xl">
+        <div className="glass-md rounded-2xl p-6 sm:p-7 glow-card">
           <form onSubmit={handleSubmit(onSubmit)} id="signup-form">
 
-            {/* Step 0: Account Info */}
+            {/* ── Step 0: Account ── */}
             {currentStep === 0 && (
               <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="signup-firstName">First Name</label>
-                    <input
-                      id="signup-firstName"
-                      {...register('firstName')}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 input-glow transition-all"
-                      placeholder="John"
-                    />
-                    {errors.firstName && <p className="mt-1 text-xs text-red-400">{errors.firstName.message}</p>}
+                    <label className={labelCls} htmlFor="signup-firstName">First Name</label>
+                    <input id="signup-firstName" {...register('firstName')} className={inputCls} placeholder="John" />
+                    {errors.firstName && <p className="mt-1 text-[11px] text-red-400">{errors.firstName.message}</p>}
                   </div>
                   <div>
-                    <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="signup-lastName">Last Name</label>
-                    <input
-                      id="signup-lastName"
-                      {...register('lastName')}
-                      className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 input-glow transition-all"
-                      placeholder="Doe"
-                    />
-                    {errors.lastName && <p className="mt-1 text-xs text-red-400">{errors.lastName.message}</p>}
+                    <label className={labelCls} htmlFor="signup-lastName">Last Name</label>
+                    <input id="signup-lastName" {...register('lastName')} className={inputCls} placeholder="Doe" />
+                    {errors.lastName && <p className="mt-1 text-[11px] text-red-400">{errors.lastName.message}</p>}
                   </div>
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="signup-email">Email address</label>
-                  <input
-                    id="signup-email"
-                    type="email"
-                    autoComplete="email"
-                    {...register('email')}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 input-glow transition-all"
-                    placeholder="you@example.com"
-                  />
-                  {errors.email && <p className="mt-1 text-xs text-red-400">{errors.email.message}</p>}
+                  <label className={labelCls} htmlFor="signup-email">Email Address</label>
+                  <input id="signup-email" type="email" autoComplete="email" {...register('email')}
+                    className={inputCls} placeholder="you@example.com" />
+                  {errors.email && <p className="mt-1 text-[11px] text-red-400">{errors.email.message}</p>}
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="signup-password">Password</label>
+                  <label className={labelCls} htmlFor="signup-password">Password</label>
                   <div className="relative">
-                    <input
-                      id="signup-password"
-                      type={showPassword ? 'text' : 'password'}
-                      autoComplete="new-password"
-                      {...register('password')}
-                      className="w-full px-4 py-3 pr-11 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 input-glow transition-all"
-                      placeholder="••••••••"
-                    />
+                    <input id="signup-password" type={showPassword ? 'text' : 'password'}
+                      autoComplete="new-password" {...register('password')}
+                      className={`${inputCls} pr-11`} placeholder="••••••••" />
                     <button type="button" onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300">
-                      {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors p-0.5">
+                      {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
                   </div>
                   {password && (
-                    <div className="mt-3 grid grid-cols-2 gap-1.5">
-                      {passwordChecks.map(check => (
-                        <div key={check.label} className={`flex items-center gap-1.5 text-xs ${check.valid ? 'text-green-400' : 'text-gray-500'}`}>
-                          <CheckCircle className={`w-3 h-3 ${check.valid ? 'text-green-400' : 'text-gray-600'}`} />
-                          {check.label}
+                    <div className="mt-2.5 grid grid-cols-2 gap-1.5">
+                      {passwordChecks.map(c => (
+                        <div key={c.label} className={`flex items-center gap-1.5 text-[11px] ${c.valid ? 'text-green-400' : 'text-gray-600'}`}>
+                          <CheckCircle className={`w-3 h-3 flex-shrink-0 ${c.valid ? 'text-green-400' : 'text-gray-700'}`} />
+                          {c.label}
                         </div>
                       ))}
                     </div>
                   )}
-                  {errors.password && <p className="mt-1 text-xs text-red-400">{errors.password.message}</p>}
+                  {errors.password && <p className="mt-1 text-[11px] text-red-400">{errors.password.message}</p>}
                 </div>
               </div>
             )}
 
-            {/* Step 1: Business Info */}
+            {/* ── Step 1: Business ── */}
             {currentStep === 1 && (
               <div className="space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="signup-company">Company Name <span className="text-gray-500">(optional)</span></label>
-                  <input
-                    id="signup-company"
-                    {...register('company')}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 input-glow transition-all"
-                    placeholder="Acme Corp"
-                  />
+                  <label className={labelCls} htmlFor="signup-company">
+                    Company Name <span className="text-gray-600 normal-case tracking-normal font-normal">(optional)</span>
+                  </label>
+                  <input id="signup-company" {...register('company')} className={inputCls} placeholder="Acme Corp" />
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="signup-industry">Industry <span className="text-gray-500">(optional)</span></label>
-                  <select
-                    id="signup-industry"
-                    {...register('industry')}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 input-glow transition-all"
-                  >
-                    <option value="" className="bg-gray-900">Select industry</option>
-                    {industries.map(ind => (
-                      <option key={ind} value={ind} className="bg-gray-900">{ind}</option>
-                    ))}
+                  <label className={labelCls} htmlFor="signup-industry">
+                    Industry <span className="text-gray-600 normal-case tracking-normal font-normal">(optional)</span>
+                  </label>
+                  <select id="signup-industry" {...register('industry')} className={selectCls}>
+                    <option value="" className="bg-[#0f0c29]">Select industry</option>
+                    {industries.map(ind => <option key={ind} value={ind} className="bg-[#0f0c29]">{ind}</option>)}
                   </select>
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="signup-phone">Phone <span className="text-gray-500">(optional)</span></label>
-                  <input
-                    id="signup-phone"
-                    {...register('phone')}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 input-glow transition-all"
-                    placeholder="+1 (555) 000-0000"
-                  />
+                  <label className={labelCls} htmlFor="signup-phone">
+                    Phone <span className="text-gray-600 normal-case tracking-normal font-normal">(optional)</span>
+                  </label>
+                  <input id="signup-phone" {...register('phone')} className={inputCls} placeholder="+1 (555) 000-0000" />
                 </div>
-
                 <div>
-                  <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="signup-country">Country <span className="text-gray-500">(optional)</span></label>
-                  <select
-                    id="signup-country"
-                    {...register('country')}
-                    className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white focus:outline-none focus:border-indigo-500 input-glow transition-all"
-                  >
-                    <option value="" className="bg-gray-900">Select country</option>
-                    {countries.map(c => (
-                      <option key={c.code} value={c.code} className="bg-gray-900">{c.name}</option>
-                    ))}
+                  <label className={labelCls} htmlFor="signup-country">
+                    Country <span className="text-gray-600 normal-case tracking-normal font-normal">(optional)</span>
+                  </label>
+                  <select id="signup-country" {...register('country')} className={selectCls}>
+                    <option value="" className="bg-[#0f0c29]">Select country</option>
+                    {countries.map(c => <option key={c.code} value={c.code} className="bg-[#0f0c29]">{c.name}</option>)}
                   </select>
                 </div>
               </div>
             )}
 
-            {/* Step 2: Review */}
+            {/* ── Step 2: Review ── */}
             {currentStep === 2 && (
               <div className="space-y-4">
-                <div className="p-5 rounded-2xl bg-indigo-500/10 border border-indigo-500/20">
-                  <h3 className="text-sm font-semibold text-indigo-300 mb-3">What happens next?</h3>
-                  <div className="space-y-2">
+                <div className="p-4 rounded-xl bg-indigo-500/8 border border-indigo-500/18">
+                  <h3 className="text-[13px] font-semibold text-indigo-300 mb-3">What happens next?</h3>
+                  <div className="space-y-2.5">
                     {[
                       'Your account will be created instantly',
-                      'You\'ll start a 4-step onboarding workflow',
+                      "You'll start a 4-step onboarding workflow",
                       'Upload identity and business documents',
                       'Get verified and start using the platform',
                     ].map((item, i) => (
-                      <div key={i} className="flex items-start gap-2 text-sm text-gray-300">
-                        <div className="w-5 h-5 rounded-full bg-indigo-600/30 flex items-center justify-center flex-shrink-0 mt-0.5">
-                          <span className="text-xs text-indigo-400">{i + 1}</span>
+                      <div key={i} className="flex items-start gap-2.5 text-[12.5px] text-gray-300">
+                        <div className="w-5 h-5 rounded-full bg-indigo-600/25 border border-indigo-500/20 flex items-center justify-center flex-shrink-0 mt-0.5">
+                          <span className="text-[10px] font-bold text-indigo-400">{i + 1}</span>
                         </div>
                         {item}
                       </div>
                     ))}
                   </div>
                 </div>
-                <p className="text-xs text-gray-500 text-center">
+                <p className="text-[11.5px] text-gray-600 text-center">
                   By creating an account, you agree to our Terms of Service and Privacy Policy.
                 </p>
               </div>
             )}
 
-            {/* Navigation buttons */}
-            <div className="flex gap-3 mt-6">
+            {/* ── Nav buttons ── */}
+            <div className="flex gap-3 mt-5">
               {currentStep > 0 && (
-                <button
-                  type="button"
-                  onClick={() => setCurrentStep(s => s - 1)}
-                  className="flex-1 py-3.5 glass border border-white/10 hover:border-white/20 rounded-xl font-medium text-gray-300 hover:text-white transition-all"
-                >
+                <button type="button" onClick={() => setCurrentStep(s => s - 1)}
+                  className="btn-ghost flex-1 py-2.5 text-sm">
                   Back
                 </button>
               )}
-
               {currentStep < 2 ? (
-                <button
-                  type="button"
-                  id={`signup-next-${currentStep}`}
-                  onClick={nextStep}
-                  className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 rounded-xl font-semibold text-white transition-all shadow-lg shadow-indigo-500/25"
-                >
+                <button type="button" id={`signup-next-${currentStep}`} onClick={nextStep}
+                  className="btn-primary flex-1 py-2.5 text-sm">
                   Continue <ArrowRight className="w-4 h-4" />
                 </button>
               ) : (
-                <button
-                  type="submit"
-                  id="signup-submit"
-                  disabled={isLoading}
-                  className="flex-1 flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-50 rounded-xl font-semibold text-white transition-all shadow-lg shadow-indigo-500/25"
-                >
-                  {isLoading ? (
-                    <><Loader2 className="w-5 h-5 animate-spin" /> Creating account...</>
-                  ) : (
-                    <>Create Account <ArrowRight className="w-4 h-4" /></>
-                  )}
+                <button type="submit" id="signup-submit" disabled={isLoading}
+                  className="btn-primary flex-1 py-2.5 text-sm">
+                  {isLoading
+                    ? <><Loader2 className="w-4 h-4 animate-spin" />Creating…</>
+                    : <>Create Account <ArrowRight className="w-4 h-4" /></>
+                  }
                 </button>
               )}
             </div>
           </form>
 
-          <p className="text-center text-sm text-gray-400 mt-6">
-            Already have an account?{' '}
-            <Link href="/login" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
-              Sign in
-            </Link>
-          </p>
+          <div className="mt-5 pt-5 border-t border-white/6 text-center">
+            <p className="text-[12.5px] text-gray-500">
+              Already have an account?{' '}
+              <Link href="/login" className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">
+                Sign in
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>
