@@ -11,11 +11,12 @@ import toast from 'react-hot-toast';
 import { Eye, EyeOff, Zap, ArrowRight, Loader2 } from 'lucide-react';
 
 const loginSchema = z.object({
-  email: z.string().email('Invalid email address'),
+  email:    z.string().email('Invalid email address'),
   password: z.string().min(1, 'Password is required'),
 });
-
 type LoginForm = z.infer<typeof loginSchema>;
+
+const inputCls = "w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none input-glow transition-all text-sm";
 
 export default function LoginPage() {
   const { login } = useAuth();
@@ -36,101 +37,88 @@ export default function LoginPage() {
     } catch (err: unknown) {
       const error = err as { response?: { data?: { message?: string } } };
       toast.error(error.response?.data?.message || 'Login failed. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+    } finally { setIsLoading(false); }
   };
 
   return (
-    <div className="min-h-screen animated-bg flex items-center justify-center p-4">
-      <div className="w-full max-w-md">
+    <div className="min-h-screen animated-bg flex items-center justify-center p-4 relative overflow-hidden">
+      {/* Grid overlay */}
+      <div className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: 'linear-gradient(rgba(99,102,241,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(99,102,241,0.04) 1px, transparent 1px)',
+          backgroundSize: '64px 64px',
+        }}
+      />
+      {/* Glow */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[400px] bg-indigo-600/12 rounded-full blur-[100px] pointer-events-none" />
+
+      <div className="relative w-full max-w-[420px]">
         {/* Logo */}
         <div className="text-center mb-8">
-          <Link href="/" className="inline-flex items-center gap-3 mb-6">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
+          <Link href="/" className="inline-flex items-center gap-3 mb-7 group">
+            <div className="relative w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center shadow-xl shadow-indigo-500/30">
               <Zap className="w-5 h-5 text-white" />
+              <div className="absolute inset-0 rounded-xl ring-1 ring-white/15" />
             </div>
-            <span className="text-xl font-bold text-white">ClientFlow</span>
+            <span className="text-[17px] font-bold text-white tracking-tight">ClientFlow</span>
           </Link>
-          <h1 className="text-3xl font-bold text-white mb-2">Welcome back</h1>
-          <p className="text-gray-400">Sign in to continue your onboarding</p>
+          <h1 className="text-2xl sm:text-[28px] font-bold text-white mb-2 tracking-tight">Welcome back</h1>
+          <p className="text-gray-500 text-sm">Sign in to continue your onboarding</p>
         </div>
 
         {/* Card */}
-        <div className="glass rounded-3xl p-8 border border-white/10 shadow-2xl">
+        <div className="glass-md rounded-2xl p-7 glow-card">
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-5" id="login-form">
             {/* Email */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="login-email">
-                Email address
+              <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2" htmlFor="login-email">
+                Email Address
               </label>
-              <input
-                id="login-email"
-                type="email"
-                autoComplete="email"
-                {...register('email')}
-                className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 input-glow transition-all"
-                placeholder="you@example.com"
-              />
-              {errors.email && (
-                <p className="mt-1.5 text-xs text-red-400">{errors.email.message}</p>
-              )}
+              <input id="login-email" type="email" autoComplete="email"
+                {...register('email')} className={inputCls} placeholder="you@company.com" />
+              {errors.email && <p className="mt-1.5 text-[11px] text-red-400">{errors.email.message}</p>}
             </div>
 
             {/* Password */}
             <div>
-              <label className="block text-sm font-medium text-gray-300 mb-2" htmlFor="login-password">
+              <label className="block text-[11px] font-semibold text-gray-400 uppercase tracking-wider mb-2" htmlFor="login-password">
                 Password
               </label>
               <div className="relative">
-                <input
-                  id="login-password"
-                  type={showPassword ? 'text' : 'password'}
-                  autoComplete="current-password"
-                  {...register('password')}
-                  className="w-full px-4 py-3 pr-11 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-indigo-500 input-glow transition-all"
-                  placeholder="••••••••"
-                />
-                <button
-                  type="button"
-                  id="toggle-password"
+                <input id="login-password" type={showPassword ? 'text' : 'password'}
+                  autoComplete="current-password" {...register('password')}
+                  className={`${inputCls} pr-11`} placeholder="••••••••" />
+                <button type="button" id="toggle-password"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-300 transition-colors"
-                >
-                  {showPassword ? <EyeOff className="w-5 h-5" /> : <Eye className="w-5 h-5" />}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-300 transition-colors">
+                  {showPassword ? <EyeOff className="w-4.5 h-4.5" /> : <Eye className="w-4.5 h-4.5" />}
                 </button>
               </div>
-              {errors.password && (
-                <p className="mt-1.5 text-xs text-red-400">{errors.password.message}</p>
-              )}
+              {errors.password && <p className="mt-1.5 text-[11px] text-red-400">{errors.password.message}</p>}
             </div>
 
-            {/* Demo credentials hint */}
-            <div className="p-3 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-xs text-indigo-300">
-              <strong>Demo:</strong> demo@example.com / Demo@1234
+            {/* Demo hint */}
+            <div className="flex items-center gap-2.5 p-3.5 rounded-xl bg-indigo-500/8 border border-indigo-500/18">
+              <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse flex-shrink-0" />
+              <p className="text-[12px] text-indigo-300">
+                <span className="font-semibold">Demo:</span> demo@example.com / Demo@1234
+              </p>
             </div>
 
             {/* Submit */}
-            <button
-              type="submit"
-              id="login-submit"
-              disabled={isLoading}
-              className="w-full flex items-center justify-center gap-2 py-3.5 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-50 disabled:cursor-not-allowed rounded-xl font-semibold text-white transition-all duration-200 shadow-lg shadow-indigo-500/25"
-            >
-              {isLoading ? (
-                <><Loader2 className="w-5 h-5 animate-spin" /> Signing in...</>
-              ) : (
-                <>Sign In <ArrowRight className="w-4 h-4" /></>
-              )}
+            <button type="submit" id="login-submit" disabled={isLoading} className="btn-primary w-full py-3 text-sm">
+              {isLoading ? <><Loader2 className="w-4 h-4 animate-spin" />Signing in…</> : <>Sign In<ArrowRight className="w-4 h-4" /></>}
             </button>
           </form>
 
-          <p className="text-center text-sm text-gray-400 mt-6">
-            Don&apos;t have an account?{' '}
-            <Link href="/signup" className="text-indigo-400 hover:text-indigo-300 font-medium transition-colors">
-              Create account
-            </Link>
-          </p>
+          <div className="mt-6 pt-5 border-t border-white/6 text-center">
+            <p className="text-[12.5px] text-gray-500">
+              Don&apos;t have an account?{' '}
+              <Link href="/signup" className="text-indigo-400 hover:text-indigo-300 font-semibold transition-colors">
+                Create one free
+              </Link>
+            </p>
+          </div>
         </div>
       </div>
     </div>

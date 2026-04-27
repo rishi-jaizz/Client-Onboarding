@@ -20,10 +20,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     return (
       <div className="min-h-screen animated-bg flex items-center justify-center">
         <div className="text-center">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mx-auto mb-4 shadow-lg shadow-indigo-500/30">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center mx-auto mb-4 shadow-xl shadow-indigo-500/30">
             <Zap className="w-6 h-6 text-white" />
           </div>
-          <Loader2 className="w-6 h-6 animate-spin text-indigo-400 mx-auto" />
+          <Loader2 className="w-5 h-5 animate-spin text-indigo-400 mx-auto" />
         </div>
       </div>
     );
@@ -32,10 +32,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-screen bg-gray-950 lg:flex overflow-x-hidden">
+    <div className="min-h-screen dashboard-bg lg:flex overflow-x-hidden">
       <Sidebar />
-      {/* Push content below the mobile top bar (h-14 = 56px) */}
-      <main className="flex-1 overflow-auto pt-14 lg:pt-0">
+      {/* Push content below mobile top bar */}
+      <main className="flex-1 overflow-auto pt-[56px] lg:pt-0 min-w-0">
         {children}
       </main>
     </div>
