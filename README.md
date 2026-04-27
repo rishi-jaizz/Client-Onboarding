@@ -14,8 +14,9 @@ A complete full-stack client onboarding system featuring multi-step workflows, d
 ## Tech Stack
 
 - **Frontend:** Next.js 16, React 19, Tailwind CSS 4, Radix UI, Zod, React Hook Form, Axios, TypeScript
-- **Backend:** Node.js, Express, Prisma ORM, SQLite (or PostgreSQL), JavaScript
+- **Backend:** Node.js, Express, Prisma ORM, PostgreSQL, JavaScript
 - **Security:** Helmet, Express Rate Limit, JWT, CORS
+- **Deployment:** Vercel (Frontend), Render (Backend), Neon.tech (Database)
 
 ## Required Technical Skills
 
@@ -37,6 +38,11 @@ To fully understand and contribute to this project, developers should have the f
 - **API Documentation**: Defining OpenAPI/Swagger specifications for endpoints.
 - **Testing**: Writing automated unit and integration tests using `jest` and `supertest`.
 
+**Deployment & DevOps**
+- **Cloud Platforms**: Deploying frontend applications to Vercel and backend Node.js APIs to Render.
+- **Database Hosting**: Managing cloud PostgreSQL instances using Neon.tech.
+- **Environment Management**: Securely configuring environment variables and CORS across different deployment providers.
+
 ## Project Structure
 
 - `/frontend` - Next.js Application
@@ -49,7 +55,8 @@ To fully understand and contribute to this project, developers should have the f
 ```bash
 cd backend
 npm install
-# Setup Prisma (SQLite by default, change to Postgres in .env if desired)
+
+# Set your PostgreSQL DATABASE_URL in the .env file first
 npx prisma generate
 npx prisma db push
 
@@ -118,6 +125,6 @@ If you seeded the database, you can use the following accounts:
 - **Password:** `Test@5678`
 
 ## Development Notes
-- The SQLite database is created in `backend/dev.db`.
-- Uploads are saved in `backend/uploads/`.
-- Change `PORT` in backend `.env` if 5000/5001 is already taken.
+- The database uses PostgreSQL. Ensure `DATABASE_URL` is properly configured in `backend/.env`.
+- File uploads are saved in `backend/uploads/` (Note: ephemeral storage on free cloud tiers).
+- Change `PORT` in backend `.env` if 5001 is already taken.
