@@ -32,9 +32,10 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!isAuthenticated) return null;
 
   return (
-    <div className="min-h-screen bg-gray-950 flex">
+    <div className="min-h-screen bg-gray-950 lg:flex overflow-x-hidden">
       <Sidebar />
-      <main className="flex-1 overflow-auto">
+      {/* Push content below the mobile top bar (h-14 = 56px) */}
+      <main className="flex-1 overflow-auto pt-14 lg:pt-0">
         {children}
       </main>
     </div>

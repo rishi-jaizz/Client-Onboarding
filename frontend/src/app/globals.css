@@ -12,10 +12,12 @@
 
 html {
   scroll-behavior: smooth;
+  overflow-x: hidden;
 }
 
 body {
   font-family: var(--font-inter);
+  overflow-x: hidden;
 }
 
 /* Custom scrollbar */

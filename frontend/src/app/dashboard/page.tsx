@@ -98,18 +98,18 @@ export default function DashboardPage() {
   };
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
+    <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-6 sm:mb-8">
         <div className="flex items-center gap-3 mb-1">
           <div className={`text-xs font-medium px-2.5 py-1 rounded-full border ${clientStatusColors[client?.status || 'PENDING']} bg-current/10 border-current/20`}>
             {client?.status?.replace('_', ' ')}
           </div>
         </div>
-        <h1 className="text-3xl font-bold text-white">
+        <h1 className="text-2xl sm:text-3xl font-bold text-white">
           {greeting()}, {client?.firstName}! 👋
         </h1>
-        <p className="text-gray-400 mt-1">
+        <p className="text-gray-400 mt-1 text-sm sm:text-base">
           {progress?.isComplete
             ? 'Your onboarding is complete. Welcome aboard!'
             : 'Complete your onboarding to unlock full platform access.'}
@@ -117,13 +117,13 @@ export default function DashboardPage() {
       </div>
 
       {/* Stats cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-5 mb-8">
-        <div className="glass rounded-2xl p-5 border border-white/10">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 sm:gap-5 mb-6 sm:mb-8">
+        <div className="glass rounded-2xl p-4 sm:p-5 border border-white/10">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-gray-400">Progress</span>
             <TrendingUp className="w-4 h-4 text-indigo-400" />
           </div>
-          <div className="text-3xl font-bold text-white mb-2">{progress?.progress ?? 0}%</div>
+          <div className="text-2xl sm:text-3xl font-bold text-white mb-2">{progress?.progress ?? 0}%</div>
           <div className="w-full bg-white/10 rounded-full h-2">
             <div
               className="bg-gradient-to-r from-indigo-600 to-purple-600 h-2 rounded-full transition-all duration-700"
@@ -132,32 +132,32 @@ export default function DashboardPage() {
           </div>
         </div>
 
-        <div className="glass rounded-2xl p-5 border border-white/10">
+        <div className="glass rounded-2xl p-4 sm:p-5 border border-white/10">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-gray-400">Steps Completed</span>
             <CheckCircle2 className="w-4 h-4 text-green-400" />
           </div>
-          <div className="text-3xl font-bold text-white">
+          <div className="text-2xl sm:text-3xl font-bold text-white">
             {progress?.completedSteps ?? 0}
-            <span className="text-lg text-gray-400 font-normal"> / {progress?.totalSteps ?? 0}</span>
+            <span className="text-base sm:text-lg text-gray-400 font-normal"> / {progress?.totalSteps ?? 0}</span>
           </div>
           <p className="text-sm text-gray-500 mt-1">onboarding steps</p>
         </div>
 
-        <div className="glass rounded-2xl p-5 border border-white/10">
+        <div className="glass rounded-2xl p-4 sm:p-5 border border-white/10">
           <div className="flex items-center justify-between mb-3">
             <span className="text-sm text-gray-400">Account</span>
             <User className="w-4 h-4 text-purple-400" />
           </div>
-          <div className="text-lg font-semibold text-white truncate">{client?.email}</div>
+          <div className="text-base sm:text-lg font-semibold text-white truncate">{client?.email}</div>
           <p className="text-sm text-gray-500 mt-1">{client?.company || 'No company'}</p>
         </div>
       </div>
 
       {/* Start onboarding CTA */}
       {client?.status === 'PENDING' && (
-        <div className="glass rounded-2xl p-6 border border-indigo-500/20 bg-indigo-500/5 mb-8">
-          <div className="flex items-center justify-between flex-wrap gap-4">
+        <div className="glass rounded-2xl p-4 sm:p-6 border border-indigo-500/20 bg-indigo-500/5 mb-6 sm:mb-8">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div>
               <h3 className="font-semibold text-white mb-1">Ready to start onboarding?</h3>
               <p className="text-sm text-gray-400">Complete 4 steps to fully activate your account.</p>
@@ -166,7 +166,7 @@ export default function DashboardPage() {
               id="start-onboarding-btn"
               onClick={handleStartOnboarding}
               disabled={isStarting}
-              className="flex items-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-50 rounded-xl font-semibold text-white transition-all shadow-lg shadow-indigo-500/25"
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 disabled:opacity-50 rounded-xl font-semibold text-white transition-all shadow-lg shadow-indigo-500/25"
             >
               {isStarting ? <Loader2 className="w-4 h-4 animate-spin" /> : <ArrowRight className="w-4 h-4" />}
               {isStarting ? 'Starting...' : 'Start Now'}
@@ -176,8 +176,8 @@ export default function DashboardPage() {
       )}
 
       {/* Steps */}
-      <div className="mb-8">
-        <h2 className="text-lg font-semibold text-white mb-4">Onboarding Steps</h2>
+      <div className="mb-6 sm:mb-8">
+        <h2 className="text-base sm:text-lg font-semibold text-white mb-3 sm:mb-4">Onboarding Steps</h2>
         <div className="space-y-3">
           {progress?.steps.map((step, index) => {
             const Icon = stepIcons[step.stepType] || FileText;
@@ -187,23 +187,23 @@ export default function DashboardPage() {
             return (
               <div
                 key={step.id}
-                className={`glass rounded-2xl p-5 border transition-all duration-300 ${
+                className={`glass rounded-2xl p-4 sm:p-5 border transition-all duration-300 ${
                   isActive ? 'border-indigo-500/40 bg-indigo-500/5' :
                   isCompleted ? 'border-green-500/20' :
                   'border-white/10'
                 }`}
               >
-                <div className="flex items-center gap-4">
+                <div className="flex items-start sm:items-center gap-3 sm:gap-4">
                   {/* Step number / status icon */}
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 relative ${
+                  <div className={`w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center flex-shrink-0 relative ${
                     isCompleted ? 'bg-green-500/20 border border-green-500/30' :
                     isActive ? 'bg-indigo-500/20 border border-indigo-500/40' :
                     'bg-white/5 border border-white/10'
                   }`}>
                     {isCompleted ? (
-                      <CheckCircle2 className="w-5 h-5 text-green-400" />
+                      <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5 text-green-400" />
                     ) : isActive ? (
-                      <Icon className="w-5 h-5 text-indigo-400" />
+                      <Icon className="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400" />
                     ) : (
                       <span className="text-sm font-semibold text-gray-400">{index + 1}</span>
                     )}
@@ -213,7 +213,7 @@ export default function DashboardPage() {
                   </div>
 
                   <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
+                    <div className="flex flex-wrap items-center gap-2 mb-0.5">
                       <span className={`font-semibold text-sm ${isCompleted ? 'text-green-300' : isActive ? 'text-white' : 'text-gray-300'}`}>
                         {step.title}
                       </span>
@@ -221,7 +221,7 @@ export default function DashboardPage() {
                         {step.status.replace('_', ' ')}
                       </span>
                     </div>
-                    <p className="text-xs text-gray-500">{step.description}</p>
+                    <p className="text-xs text-gray-500 leading-relaxed">{step.description}</p>
                     {step.completedAt && (
                       <p className="text-xs text-gray-600 mt-0.5 flex items-center gap-1">
                         <Clock className="w-3 h-3" />
@@ -234,7 +234,7 @@ export default function DashboardPage() {
                     <Link
                       href={`/dashboard/onboarding?step=${step.stepNumber}`}
                       id={`step-${step.stepNumber}-action`}
-                      className={`flex items-center gap-1.5 text-sm px-4 py-2 rounded-xl transition-all ${
+                      className={`flex-shrink-0 flex items-center gap-1.5 text-sm px-3 sm:px-4 py-2 rounded-xl transition-all ${
                         isActive
                           ? 'bg-indigo-600 hover:bg-indigo-500 text-white font-medium'
                           : 'glass border border-white/10 text-gray-400 hover:text-white'
@@ -253,10 +253,10 @@ export default function DashboardPage() {
 
       {/* Completed message */}
       {progress?.isComplete && (
-        <div className="glass rounded-2xl p-8 border border-green-500/20 bg-green-500/5 text-center">
-          <CheckCircle2 className="w-12 h-12 text-green-400 mx-auto mb-3" />
-          <h3 className="text-xl font-bold text-white mb-2">Onboarding Complete! 🎉</h3>
-          <p className="text-gray-400">All steps have been completed. Your account is fully activated.</p>
+        <div className="glass rounded-2xl p-6 sm:p-8 border border-green-500/20 bg-green-500/5 text-center">
+          <CheckCircle2 className="w-10 h-10 sm:w-12 sm:h-12 text-green-400 mx-auto mb-3" />
+          <h3 className="text-lg sm:text-xl font-bold text-white mb-2">Onboarding Complete! 🎉</h3>
+          <p className="text-gray-400 text-sm sm:text-base">All steps have been completed. Your account is fully activated.</p>
         </div>
       )}
     </div>

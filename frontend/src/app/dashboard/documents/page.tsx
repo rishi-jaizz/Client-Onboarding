@@ -41,6 +41,8 @@ function formatBytes(bytes: number) {
   return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
+const API_BASE = process.env.NEXT_PUBLIC_API_URL?.replace('/api/v1', '') || 'http://localhost:5001';
+
 export default function DocumentsPage() {
   const [documents, setDocuments] = useState<Document[]>([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -112,31 +114,31 @@ export default function DocumentsPage() {
   };
 
   return (
-    <div className="p-8 max-w-5xl mx-auto">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold text-white mb-1">Documents</h1>
+    <div className="p-4 sm:p-6 lg:p-8 max-w-5xl mx-auto">
+      <div className="mb-6 sm:mb-8">
+        <h1 className="text-xl sm:text-2xl font-bold text-white mb-1">Documents</h1>
         <p className="text-gray-400 text-sm">Upload and manage your verification documents</p>
       </div>
 
       {/* Stats */}
-      <div className="grid grid-cols-4 gap-4 mb-8">
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6 sm:mb-8">
         {[
           { label: 'Total', value: stats.total, color: 'text-white' },
           { label: 'Pending', value: stats.pending, color: 'text-yellow-400' },
           { label: 'Approved', value: stats.approved, color: 'text-green-400' },
           { label: 'Rejected', value: stats.rejected, color: 'text-red-400' },
         ].map(stat => (
-          <div key={stat.label} className="glass rounded-2xl p-4 border border-white/10 text-center">
-            <div className={`text-2xl font-bold ${stat.color}`}>{stat.value}</div>
+          <div key={stat.label} className="glass rounded-2xl p-3 sm:p-4 border border-white/10 text-center">
+            <div className={`text-xl sm:text-2xl font-bold ${stat.color}`}>{stat.value}</div>
             <div className="text-xs text-gray-400 mt-0.5">{stat.label}</div>
           </div>
         ))}
       </div>
 
-      <div className="grid lg:grid-cols-5 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-5 gap-5 sm:gap-6">
         {/* Upload Panel */}
         <div className="lg:col-span-2">
-          <div className="glass rounded-2xl p-5 border border-white/10">
+          <div className="glass rounded-2xl p-4 sm:p-5 border border-white/10">
             <h2 className="font-semibold text-white mb-4">Upload Document</h2>
 
             <div className="mb-4">
@@ -159,11 +161,11 @@ export default function DocumentsPage() {
               onDragLeave={() => setIsDragging(false)}
               onDrop={e => { e.preventDefault(); setIsDragging(false); const f = e.dataTransfer.files[0]; if (f) handleFileSelect(f); }}
               onClick={() => document.getElementById('file-input')?.click()}
-              className={`border-2 border-dashed rounded-2xl p-6 text-center cursor-pointer transition-all duration-200 ${
+              className={`border-2 border-dashed rounded-2xl p-5 sm:p-6 text-center cursor-pointer transition-all duration-200 ${
                 isDragging ? 'border-indigo-500 bg-indigo-500/10' : 'border-white/20 hover:border-indigo-500/50'
               }`}
             >
-              <Upload className="w-8 h-8 text-gray-500 mx-auto mb-2" />
+              <Upload className="w-7 h-7 sm:w-8 sm:h-8 text-gray-500 mx-auto mb-2" />
               <p className="text-sm text-gray-300 font-medium mb-1">
                 {selectedFile ? selectedFile.name : 'Drop or click to upload'}
               </p>
@@ -182,8 +184,8 @@ export default function DocumentsPage() {
                 <div className="mt-3 flex items-center gap-2 p-2.5 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
                   <FileText className="w-4 h-4 text-indigo-400 flex-shrink-0" />
                   <span className="text-xs text-indigo-300 truncate flex-1">{selectedFile.name}</span>
-                  <span className="text-xs text-gray-500">{formatBytes(selectedFile.size)}</span>
-                  <button onClick={() => setSelectedFile(null)} className="text-gray-400 hover:text-white">
+                  <span className="text-xs text-gray-500 flex-shrink-0">{formatBytes(selectedFile.size)}</span>
+                  <button onClick={() => setSelectedFile(null)} className="text-gray-400 hover:text-white flex-shrink-0">
                     <X className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -203,7 +205,7 @@ export default function DocumentsPage() {
 
         {/* Documents list */}
         <div className="lg:col-span-3">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center justify-between mb-4 gap-3">
             <h2 className="font-semibold text-white">Uploaded Documents</h2>
             <select
               value={statusFilter}
@@ -225,7 +227,7 @@ export default function DocumentsPage() {
             <div className="glass rounded-2xl p-8 border border-white/10 text-center">
               <FileText className="w-10 h-10 text-gray-600 mx-auto mb-3" />
               <p className="text-gray-400">No documents uploaded yet</p>
-              <p className="text-xs text-gray-500 mt-1">Upload your first document using the form on the left</p>
+              <p className="text-xs text-gray-500 mt-1">Upload your first document using the form above</p>
             </div>
           ) : (
             <div className="space-y-3">
@@ -234,30 +236,30 @@ export default function DocumentsPage() {
                 const StatusIcon = status.icon;
 
                 return (
-                  <div key={doc.id} className="glass rounded-2xl p-4 border border-white/10 hover:border-white/20 transition-all">
+                  <div key={doc.id} className="glass rounded-2xl p-3 sm:p-4 border border-white/10 hover:border-white/20 transition-all">
                     <div className="flex items-center gap-3">
-                      <div className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center flex-shrink-0">
-                        <FileText className="w-5 h-5 text-gray-400" />
+                      <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-white/5 flex items-center justify-center flex-shrink-0">
+                        <FileText className="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium text-white truncate">{doc.originalName}</p>
-                        <div className="flex items-center gap-2 mt-0.5">
+                        <div className="flex flex-wrap items-center gap-1.5 mt-0.5">
                           <span className="text-xs text-gray-500">
                             {DOCUMENT_TYPES.find(t => t.value === doc.documentType)?.label}
                           </span>
-                          <span className="text-gray-600">·</span>
+                          <span className="text-gray-600 text-xs">·</span>
                           <span className="text-xs text-gray-500">{formatBytes(doc.fileSize)}</span>
-                          <span className="text-gray-600">·</span>
-                          <span className="text-xs text-gray-500">{new Date(doc.uploadedAt).toLocaleDateString()}</span>
+                          <span className="text-gray-600 text-xs hidden sm:inline">·</span>
+                          <span className="text-xs text-gray-500 hidden sm:inline">{new Date(doc.uploadedAt).toLocaleDateString()}</span>
                         </div>
                       </div>
-                      <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${status.bg}`}>
+                      <div className={`hidden sm:flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${status.bg} flex-shrink-0`}>
                         <StatusIcon className={`w-3.5 h-3.5 ${status.color}`} />
                         <span className={`text-xs font-medium ${status.color}`}>{doc.status}</span>
                       </div>
-                      <div className="flex items-center gap-1">
+                      <div className="flex items-center gap-1 flex-shrink-0">
                         <a
-                          href={`http://localhost:5000${doc.downloadUrl}`}
+                          href={`${API_BASE}${doc.downloadUrl}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="w-8 h-8 flex items-center justify-center glass border border-white/10 hover:border-white/20 rounded-lg text-gray-400 hover:text-white transition-all"
@@ -276,6 +278,11 @@ export default function DocumentsPage() {
                           </button>
                         )}
                       </div>
+                    </div>
+                    {/* Mobile status badge */}
+                    <div className={`sm:hidden flex items-center gap-1.5 px-2.5 py-1 rounded-lg ${status.bg} w-fit mt-2 ml-12`}>
+                      <StatusIcon className={`w-3 h-3 ${status.color}`} />
+                      <span className={`text-xs font-medium ${status.color}`}>{doc.status}</span>
                     </div>
                   </div>
                 );
